@@ -13,7 +13,20 @@ module Api
       render json: { data: serialize_contact(contact) }
     end
 
+    def update
+      contact = Contact.find(params[:id])
+
+      contact.update_attributes(contact_params)
+
+      render json: { data: serialize_contact(contact) }
+    end
+
+
     private
+
+    def contact_params
+      params.permit(:name, :photo_url, :interests)
+    end
 
     def serialize_contact(contact)
       {

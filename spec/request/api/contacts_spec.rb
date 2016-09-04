@@ -2,10 +2,6 @@ require 'rails_helper'
 
 RSpec.describe '/api/contacts', type: :request do
 
-  def parsed_json
-    JSON.parse(response.body)
-  end
-
   let!(:contact) {
     Contact.create!(
       name: 'bob tester',
@@ -57,6 +53,26 @@ RSpec.describe '/api/contacts', type: :request do
       end
 
       expect(response).to have_http_status(404)
+    end
+  end
+
+  describe 'PATCH /{id}' do
+    let(:req_data) {
+      {
+        name: 'bjorn tester',
+        photo_url: 'http://locahost/other-photos/1',
+        interests: 'nordic skiing'
+      }
+    }
+
+    it 'allows the resource to be updated' do
+      patch "/api/contacts/#{contact.to_param}", req_data.to_json, json_request_headers
+
+      expect(response).to have_http_status(200)
+
+      expect(parsed_json).to eql(
+        data: req_data
+      )
     end
   end
 end
