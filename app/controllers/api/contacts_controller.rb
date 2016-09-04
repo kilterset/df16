@@ -5,12 +5,7 @@ module Api
       contacts = Contact.all
 
       if params[:interests].present?
-        interests = params[:interests].split(',')
-
-        contacts = contacts.where(
-          *(['interests like ?']*interests.length).join(' OR '),
-          *interests.map {|i| "%#{i}%" }
-        )
+        contacts = contacts.with_interests(params[:interests].split(','))
       end
 
       render json: { data: contacts.map(&method(:serialize_contact)) }
