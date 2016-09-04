@@ -50,5 +50,13 @@ RSpec.describe '/api/contacts', type: :request do
         }
       )
     end
+
+    it 'returns 404 for unknown resources' do
+      respond_without_detailed_exceptions do
+        get "/api/contacts/pizza"
+      end
+
+      expect(response).to have_http_status(404)
+    end
   end
 end
