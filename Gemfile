@@ -9,12 +9,17 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'puma'
 
+gem 'react-rails'
+
 group :development, :test do
   gem 'byebug'
 end
 
 group :test do
   gem 'rspec-rails'
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 group :development do
