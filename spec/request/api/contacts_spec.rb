@@ -21,11 +21,11 @@ RSpec.describe '/api/contacts', type: :request do
       get '/api/contacts'
 
       expect(parsed_json).to eql(
-        'data' => [
+        data: [
           {
-            'name' => 'bob tester',
-            'photo_url' => 'http://localhost/photos/1',
-            'interests' => 'pizza chips'
+            name: 'bob tester',
+            photo_url: 'http://localhost/photos/1',
+            interests: 'pizza chips'
           }
         ]
       )
@@ -39,10 +39,10 @@ RSpec.describe '/api/contacts', type: :request do
       expect(response).to have_http_status(200)
 
       expect(parsed_json).to eql(
-        'data' => {
-          'name' => 'bob tester',
-          'photo_url' => 'http://localhost/photos/1',
-          'interests' => 'pizza chips'
+        data: {
+          name: 'bob tester',
+          photo_url: 'http://localhost/photos/1',
+          interests: 'pizza chips'
         }
       )
     end
