@@ -1,0 +1,38 @@
+require 'rails_helper'
+
+RSpec.describe '/api/contacts', type: :request do
+
+  def parsed_json
+    JSON.parse(response.body)
+  end
+
+  describe 'GET /' do
+    let!(:contact) {
+      Contact.create!(
+        name: 'bob tester',
+        photo_url: 'http://localhost/photos/1',
+        interests: 'pizza chips'
+      )
+    }
+
+    it 'returns a 200' do
+      get '/api/contacts'
+
+      expect(response).to have_http_status(200)
+    end
+
+    it 'returns a list of contacts' do
+      get '/api/contacts'
+
+      expect(parsed_json).to eql(
+        'data' => [
+          {
+            'name' => 'bob tester',
+            'photo_url' => 'http://localhost/photos/1',
+            'interests' => 'pizza chips'
+          }
+        ]
+      )
+    end
+  end
+end
