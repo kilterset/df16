@@ -34,6 +34,7 @@ module Api
 
     def serialize_contact(contact)
       {
+        id: contact.to_param,
         name: contact.name,
         photo_url: contact.photo_url,
         interests: contact.interests

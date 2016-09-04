@@ -26,6 +26,7 @@ RSpec.describe '/api/contacts', type: :request do
       expect(parsed_json).to eql(
         data: [
           {
+            id: contact.to_param,
             name: 'bob tester',
             photo_url: 'http://localhost/photos/1',
             interests: 'pizza chips'
@@ -98,6 +99,7 @@ RSpec.describe '/api/contacts', type: :request do
 
       expect(parsed_json).to eql(
         data: {
+          id: contact.to_param,
           name: 'bob tester',
           photo_url: 'http://localhost/photos/1',
           interests: 'pizza chips'
@@ -128,9 +130,11 @@ RSpec.describe '/api/contacts', type: :request do
 
       expect(response).to have_http_status(200)
 
-      expect(parsed_json).to eql(
-        data: req_data
-      )
+      expect(parsed_json).to eql(data: req_data.merge(id: contact.to_param))
+
+      get "/api/contacts/#{contact.to_param}"
+
+      expect(parsed_json).to eql(data: req_data.merge(id: contact.to_param))
     end
   end
 end
