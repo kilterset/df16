@@ -6,15 +6,15 @@ RSpec.describe '/api/contacts', type: :request do
     JSON.parse(response.body)
   end
 
-  describe 'GET /' do
-    let!(:contact) {
-      Contact.create!(
-        name: 'bob tester',
-        photo_url: 'http://localhost/photos/1',
-        interests: 'pizza chips'
-      )
-    }
+  let!(:contact) {
+    Contact.create!(
+      name: 'bob tester',
+      photo_url: 'http://localhost/photos/1',
+      interests: 'pizza chips'
+    )
+  }
 
+  describe 'GET /' do
     it 'returns a 200' do
       get '/api/contacts'
 
@@ -32,6 +32,22 @@ RSpec.describe '/api/contacts', type: :request do
             'interests' => 'pizza chips'
           }
         ]
+      )
+    end
+  end
+
+  describe 'GET /{id}' do
+    it 'returns the individual contact' do
+      get "/api/contacts/#{contact.to_param}"
+
+      expect(response).to have_http_status(200)
+
+      expect(parsed_json).to eql(
+        'data' => {
+          'name' => 'bob tester',
+          'photo_url' => 'http://localhost/photos/1',
+          'interests' => 'pizza chips'
+        }
       )
     end
   end
