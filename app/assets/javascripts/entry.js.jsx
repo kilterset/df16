@@ -36,12 +36,15 @@
   // Reducers
 
   var DEFAULT_STATE = {
-    contacts: []
+    contacts: [],
+    filter: ''
   }
   function reducer (state, action) {
     switch (action.type) {
       case 'SET_CONTACTS':
-        return { contacts: action.contacts }
+        return { contacts: action.contacts, filter: state.filter }
+      case 'FILTER_CONTACTS':
+        return { contacts: state.contacts, filter: action.filter }
     }
     return state || DEFAULT_STATE
   }
@@ -54,9 +57,21 @@
       contacts: contacts
     }
   }
+
+  function contactFilterChanged(filter) {
+    return {
+      type: 'FILTER_CONTACTS',
+      filter: filter
+    }
+  }
   function fetchContacts() {
-    return function (dispatch) {
-      fetch('/api/contacts').then((resp) => {
+    return function (dispatch, getState) {
+      var filter = getState().filter
+      var queryParams = ''
+      if (filter.length > 0) {
+        queryParams = '?interests='+filter
+      }
+      fetch('/api/contacts'+queryParams).then((resp) => {
         if (resp.ok) {
           return resp.json()
         } else {
@@ -88,10 +103,19 @@
   })
 
   var ContactList = React.createClass({
+    filterChanged (element) {
+      this.props.dispatch(contactFilterChanged(element.target.value))
+      this.props.dispatch(fetchContacts())
+    },
     render () {
       var contacts = this.props.contacts
+      var filter = this.props.filter
       return (
         <div>
+          <label>
+            Filter interests:
+            <input value={filter} onChange={this.filterChanged}/>
+          </label>
           {contacts.map((contact) => <Contact key={contact.id} data={contact} /> )}
         </div>
       )
@@ -108,12 +132,15 @@
       this.setState({ storeState: state })
     },
     render () {
-      var contacts = this.state.storeState.contacts
+      var storeState = this.state.storeState
+      var contacts = storeState.contacts
+      var filter = storeState.filter
+      var dispatch = this.props.store.dispatch
       return (
         <div>
           <h1>Interested.io</h1>
           <hr/>
-          <ContactList contacts={contacts}/>
+          <ContactList contacts={contacts} filter={filter} dispatch={dispatch}/>
         </div>
       )
     }
