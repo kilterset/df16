@@ -77,6 +77,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
+    newrelic_rpm (3.16.2.321)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
@@ -177,6 +178,7 @@ DEPENDENCIES
   byebug
   capybara
   database_cleaner
+  newrelic_rpm
   pg
   puma
   rails (= 4.2.7.1)
