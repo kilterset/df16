@@ -1,6 +1,6 @@
 (function(){
   var container = document.getElementById('app')
-
+  var CLOUDINARY_ID = 'iq7euzib'
   if (!window.fetch) {
     alert('JS fetch API is required for this site! Please use a modern browser such as chrome.')
   }
@@ -64,6 +64,43 @@
       filter: filter
     }
   }
+
+  function uploadingImage(contactId) {
+    return {
+      type: 'UPLOADING_IMAGE',
+      contactId: contactId
+    }
+  }
+  function imageUploaded(contactId) {
+    return  {
+      type: 'IMAGE_UPLOADED',
+      contactId: contactId
+    }
+  }
+  function imageUploadFailed(contactId) {
+    return  {
+      type: 'IMAGE_UPLOAD_FAILED',
+      contactId: contactId
+    }
+  }
+  function updatingContact(contactId) {
+    return  {
+      type: 'UPDATING_CONTACT',
+      contactId: contactId
+    }
+  }
+  function contactUpdated(contactId) {
+    return  {
+      type: 'CONTACT_UPDATED',
+      contactId: contactId
+    }
+  }
+  function contactUpdateFailed(contactId) {
+    return  {
+      type: 'CONTACT_UPDATE_FAILED',
+      contactId: contactId
+    }
+  }
   function fetchContacts() {
     return function (dispatch, getState) {
       var filter = getState().filter
@@ -84,9 +121,64 @@
       })
     }
   }
+
+  function updateContact(contactId, changedAttrs) {
+    return (dispatch) => {
+      var options = {
+        method: 'PATCH',
+        body: JSON.stringify(changedAttrs),
+        headers: { 'Content-Type': 'application/json' }
+      }
+      fetch('/api/contacts/' + contactId, options).then((resp) => {
+        if (resp.ok) {
+          return resp.json()
+        }
+        return Promise.reject('contact update failed')
+      }).then((body) => {
+        dispatch(contactChanged(body))
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  }
+
+  function uploadImage (file, contact) {
+    var contactId = contact.id
+    var data = new window.FormData()
+    data.append('file', file)
+    data.append('upload_preset', CLOUDINARY_ID)
+    return (dispatch, getState) => {
+      dispatch(uploadingImage(contactId))
+      fetch(
+        'https://api.cloudinary.com/v1_1/huxfscq7g/image/upload',
+        { method: 'post', body: data }
+      ).then(function (resp) {
+        if (resp.status !== 200) {
+          return Promise.reject(new Error('unable to upload photo'))
+        }
+        return resp.json()
+      }).then(function (json) {
+        console.log(json)
+        dispatch(imageUploaded(contactId))
+        dispatch(updateContact(contactId, {photo_url: json.secure_url}))
+      }).catch(function (error) {
+        console.log(error)
+        dispatch(imageUploadFailed(contactId))
+      })
+    }
+  }
+
   // Components
 
   var Contact = React.createClass({
+    fileChanged (e) {
+      var target = e.target
+      var files = target.files
+      if (files.length > 0) {
+        var file = files[0]
+        this.props.dispatch(uploadImage(file, this.props.data))
+      }
+    },
     render () {
       var contact = this.props.data
       var interests = contact.interests.split(' ')
@@ -96,6 +188,7 @@
         <div>
           <h1>{contact.name}</h1>
           {image}
+          <input type='file' onChange={this.fileChanged} />
           {interests.join(', ')}
         </div>
       )
@@ -116,7 +209,7 @@
             Filter interests:
             <input value={filter} onChange={this.filterChanged}/>
           </label>
-          {contacts.map((contact) => <Contact key={contact.id} data={contact} /> )}
+          {contacts.map((contact) => <Contact key={contact.id} data={contact} dispatch={this.props.dispatch}/> )}
         </div>
       )
     }
