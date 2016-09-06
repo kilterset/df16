@@ -181,7 +181,6 @@
     },
     render () {
       var contact = this.props.data
-      var interests = contact.interests.split(' ')
       var url = contact.photo_url
       var image = url ? <img src={url} alt='contact image'/> : null
       return (
@@ -189,7 +188,7 @@
           <h1>{contact.name}</h1>
           {image}
           <input type='file' onChange={this.fileChanged} />
-          {interests.join(', ')}
+          {contact.interests}
         </div>
       )
     }
