@@ -2,7 +2,7 @@ module Api
   class ContactsController < ApplicationController
 
     def index
-      contacts = Contact.all
+      contacts = Contact.all.order('updated_at desc')
 
       if params[:interests].present?
         contacts = contacts.with_interests(params[:interests].split(','))
