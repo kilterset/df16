@@ -5,6 +5,7 @@ img {
   object-fit: cover;
   width: 100px;
   height: 100px;
+  margin-right: 10px;
 }
 input[type=file] {
   position: absolute;
@@ -27,7 +28,7 @@ input[type=file] {
   content: 'Upload photo';
   position: absolute;
   left: 1px;
-  top: -45px;
+  top: 45px;
 }
 
 .contact-panel {

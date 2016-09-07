@@ -182,7 +182,7 @@
     render () {
       var contact = this.props.data
       var url = contact.photo_url
-      var image = url ? <img src={url} alt='contact image'/> : null
+      var image = url ? <img src={url} alt='contact image'/> : <img src='/placeholder.png' alt='placeholder image' />
       return (
         <div className='contact-panel'>
           <label className='file-input'>
