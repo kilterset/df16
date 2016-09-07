@@ -193,7 +193,6 @@
             <h1>{contact.name}</h1>
             <p>{contact.interests}</p>
           </div>
-
         </div>
       )
     }
@@ -235,8 +234,10 @@
       var dispatch = this.props.store.dispatch
       return (
         <div>
-          <h1>Interested.io</h1>
-          <hr/>
+          <header>
+            <img src='2015-dreamforce.png'/>
+            <h1>Demo App - 2016</h1>
+          </header>
           <ContactList contacts={contacts} filter={filter} dispatch={dispatch}/>
         </div>
       )
