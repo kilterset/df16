@@ -189,8 +189,11 @@
             {image}
             <input type='file' onChange={this.fileChanged} />
           </label>
-          <h1>{contact.name}</h1>
-          {contact.interests}
+          <div>
+            <h1>{contact.name}</h1>
+            <p>{contact.interests}</p>
+          </div>
+
         </div>
       )
     }
@@ -205,7 +208,7 @@
       var contacts = this.props.contacts
       var filter = this.props.filter
       return (
-        <div>
+        <div className='contact-list'>
           <label>
             Filter interests:
             <input value={filter} onChange={this.filterChanged}/>

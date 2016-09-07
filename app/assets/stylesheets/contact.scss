@@ -1,0 +1,36 @@
+body {
+  font-family: helvetica;
+}
+img {
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+}
+input[type=file] {
+  position: absolute;
+  left: -99999999px;
+  visibility: hidden;
+}
+
+.file-input {
+  position: relative;
+  cursor: pointer;
+}
+
+.file-input:hover img {
+  opacity: 0.6;
+}
+
+.file-input:hover:after {
+  opacity: 0.8;
+  text-align: center;
+  content: 'Upload photo';
+  position: absolute;
+  left: 1px;
+  top: -45px;
+}
+
+.contact-panel {
+  display: flex;
+  margin: 10px;
+}
