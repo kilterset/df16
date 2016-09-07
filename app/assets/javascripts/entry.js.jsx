@@ -45,6 +45,13 @@
         return { contacts: action.contacts, filter: state.filter }
       case 'FILTER_CONTACTS':
         return { contacts: state.contacts, filter: action.filter }
+      case 'CONTACT_UPDATED':
+        var newContacts = state.contacts.slice(0)
+        var newContact = action.contact
+        var existingContact = newContacts.find((contact) => contact.id == newContact.id)
+        var index = newContacts.indexOf(existingContact)
+        newContacts[index] = newContact
+        return { contacts: newContacts, filter: state.filter}
     }
     return state || DEFAULT_STATE
   }
@@ -89,10 +96,10 @@
       contactId: contactId
     }
   }
-  function contactUpdated(contactId) {
+  function contactUpdated(contact) {
     return  {
       type: 'CONTACT_UPDATED',
-      contactId: contactId
+      contact: contact
     }
   }
   function contactUpdateFailed(contactId) {
@@ -135,7 +142,7 @@
         }
         return Promise.reject('contact update failed')
       }).then((body) => {
-        dispatch(contactChanged(body))
+        dispatch(contactUpdated(body.data))
       }).catch((err) => {
         console.log(err)
       })
