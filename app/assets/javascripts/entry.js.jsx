@@ -184,10 +184,12 @@
       var url = contact.photo_url
       var image = url ? <img src={url} alt='contact image'/> : null
       return (
-        <div>
+        <div className='contact-panel'>
+          <label className='file-input'>
+            {image}
+            <input type='file' onChange={this.fileChanged} />
+          </label>
           <h1>{contact.name}</h1>
-          {image}
-          <input type='file' onChange={this.fileChanged} />
           {contact.interests}
         </div>
       )
