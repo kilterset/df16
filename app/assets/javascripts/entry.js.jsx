@@ -4,7 +4,15 @@
   if (!window.fetch) {
     alert('JS fetch API is required for this site! Please use a modern browser such as chrome.')
   }
+  function logError (error) {
+    var context = error.context
+    if (context) {
+      Raven.captureException(error, { extra: context })
+    } else {
+      Raven.captureException(error)
+    }
 
+  }
   // Store
 
   function Store (reducer, middleware) {
@@ -124,7 +132,7 @@
       }).then((body) => {
         dispatch(setContacts(body.data))
       }).catch((err) => {
-        console.log(err)
+        logError(err)
       })
     }
   }
@@ -144,7 +152,7 @@
       }).then((body) => {
         dispatch(contactUpdated(body.data))
       }).catch((err) => {
-        console.log(err)
+        logError(err)
       })
     }
   }
@@ -165,11 +173,10 @@
         }
         return resp.json()
       }).then(function (json) {
-        console.log(json)
         dispatch(imageUploaded(contactId))
         dispatch(updateContact(contactId, {photo_url: json.secure_url}))
       }).catch(function (error) {
-        console.log(error)
+        logError(error)
         dispatch(imageUploadFailed(contactId))
       })
     }

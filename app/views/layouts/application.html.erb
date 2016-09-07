@@ -4,6 +4,12 @@
     <title>Df16</title>
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= csrf_meta_tags %>
+    <script src="https://cdn.ravenjs.com/3.6.1/raven.min.js"></script>
+    <% if ENV['RAVEN_URL'].present? %>
+      <script>
+        Raven.config('<%= ENV['RAVEN_URL'] %>').install()
+      </script>
+    <% end %>
   </head>
   <body>
 
